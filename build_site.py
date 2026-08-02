@@ -1243,6 +1243,52 @@ def generate_contact_page():
         "Contact Peace Blooming to request grave cleaning or seasonal decorating service.",
         None)
 
+def generate_form_blueprint():
+    """Generate a hidden static HTML form blueprint for Netlify Forms detection.
+
+    Netlify parses static HTML files at build time to detect forms. A plain
+    HTML blueprint ensures the form is registered even if the visible form is
+    generated from a template string.
+    """
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Blueprint</title>
+</head>
+<body>
+    <!-- Hidden blueprint for Netlify Forms detection. Not linked from the site. -->
+    <form name="service-request" method="POST" action="/contact-success.html" data-netlify="true" netlify-honeypot="honeypot" hidden>
+        <input type="hidden" name="form-name" value="service-request">
+        <input type="text" id="honeypot" name="honeypot" tabindex="-1">
+        <input type="text" name="name" required>
+        <input type="text" name="contact" required>
+        <input type="text" name="cemetery" required>
+        <input type="text" name="section-lot">
+        <input type="text" name="relationship" required>
+        <select name="service-type" required>
+            <option value="">Choose one…</option>
+            <option value="cleaning">Cleaning</option>
+            <option value="decorating">Seasonal Decorating</option>
+            <option value="plan">Seasonal Care Plan</option>
+            <option value="not-sure">Not Sure Yet</option>
+        </select>
+        <select name="heard-about" required>
+            <option value="">Choose one…</option>
+            <option value="church-bulletin">Church Bulletin</option>
+            <option value="google">Google Search</option>
+            <option value="referral">Referral from Friend or Family</option>
+            <option value="facebook">Facebook</option>
+            <option value="other">Other</option>
+        </select>
+        <textarea name="message" rows="4"></textarea>
+    </form>
+</body>
+</html>
+"""
+
+
 def generate_blog_page():
     """Generate blog placeholder page."""
     content = """<section class="page-hero">
@@ -1486,6 +1532,11 @@ def main():
         filepath = SITE_ROOT / filename
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(html)
+
+    # Write Netlify form blueprint (static, not linked)
+    blueprint_path = SITE_ROOT / "__forms.html"
+    with open(blueprint_path, 'w', encoding='utf-8') as f:
+        f.write(generate_form_blueprint())
     
     # Generate cemetery pages
     print("  → Generating cemetery pages...")
