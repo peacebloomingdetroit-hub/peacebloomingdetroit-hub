@@ -621,6 +621,24 @@ a:focus-visible {
     border: 1px solid var(--border);
 }
 
+.form-success {
+    background-color: var(--sage-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-success h3 {
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+}
+
+.form-success:not([hidden]) + .contact-form {
+    display: none;
+}
+
 .form-group {
     margin: 1.5rem 0;
 }

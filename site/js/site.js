@@ -42,4 +42,15 @@
 
         observer.observe(footer);
     }
+
+    // Contact form success message
+    const formSuccess = document.getElementById('form-success');
+    const serviceForm = document.getElementById('service-request');
+    if (formSuccess && serviceForm) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('success') === '1') {
+            formSuccess.removeAttribute('hidden');
+            serviceForm.setAttribute('hidden', '');
+        }
+    }
 })();

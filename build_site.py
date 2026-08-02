@@ -1104,10 +1104,19 @@ def generate_contact_page():
         <div class="container">
             <div class="contact-form-section">
                 <h2>Request Service</h2>
-                <form name="service-request" method="POST" data-netlify="true" class="contact-form">
+                <div class="form-success" id="form-success" hidden>
+                    <h3>Thank you — your request was sent.</h3>
+                    <p>We’ll review the details and get back to you within [RESPONSE TIME]. If you don’t hear from us, please call or email directly.</p>
+                    <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
+                </div>
+
+                <form name="service-request" id="service-request" method="POST" action="/contact.html?success=1" data-netlify="true" netlify-honeypot="honeypot" class="contact-form">
                     <input type="hidden" name="form-name" value="service-request">
-                    <input type="text" name="honeypot" style="display:none" tabindex="-1">
-                    
+                    <div class="form-group" hidden>
+                        <label for="honeypot">Don’t fill this out if you’re human:</label>
+                        <input type="text" id="honeypot" name="honeypot" tabindex="-1">
+                    </div>
+
                     <div class="form-group">
                         <label for="name">Your Name</label>
                         <input type="text" id="name" name="name" required>
@@ -2073,6 +2082,24 @@ a:focus-visible {
     border: 1px solid var(--border);
 }
 
+.form-success {
+    background-color: var(--sage-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-success h3 {
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+}
+
+.form-success:not([hidden]) + .contact-form {
+    display: none;
+}
+
 .form-group {
     margin: 1.5rem 0;
 }
@@ -2603,6 +2630,17 @@ footer {
         }, { threshold: 0.1 });
 
         observer.observe(footer);
+    }
+
+    // Contact form success message
+    const formSuccess = document.getElementById('form-success');
+    const serviceForm = document.getElementById('service-request');
+    if (formSuccess && serviceForm) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('success') === '1') {
+            formSuccess.removeAttribute('hidden');
+            serviceForm.setAttribute('hidden', '');
+        }
     }
 })();
 """
