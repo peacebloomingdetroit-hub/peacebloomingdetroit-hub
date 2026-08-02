@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Peace Blooming</title>
+    <meta name="description" content="Contact Peace Blooming to request grave cleaning or seasonal decorating service.">
+    <link rel="icon" type="image/png" href="/images/logo/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header>
+        <nav class="navbar" aria-label="Main navigation">
+            <div class="nav-container">
+                <a href="/" class="logo" aria-label="Peace Blooming home">
+                    <img src="/images/logo/logo.png" alt="" class="logo-img">
+                    <span>Peace Blooming</span>
+                </a>
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <div id="nav-menu" class="nav-menu">
+                    <a href="/">Home</a>
+                    <a href="/services-and-pricing.html">Services & Pricing</a>
+                    <a href="/how-it-works.html">How It Works</a>
+                    <a href="/service-area.html">Service Area</a>
+                    <a href="/about.html">About</a>
+                    <a href="/faq.html">FAQ</a>
+                    <a href="/contact.html">Contact</a>
+                </div>
+                <a href="tel:[PHONE]" class="nav-cta btn btn-primary">Call [PHONE]</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main id="main-content">
+        <section class="page-hero">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>Tell us a little about the grave and what you'd like done, and we'll follow up with pricing and next steps.</p>
+        </div>
+    </section>
+
+    <section class="contact-content">
+        <div class="container">
+            <div class="contact-form-section">
+                <h2>Request Service</h2>
+                <form name="service-request" method="POST" data-netlify="true" class="contact-form">
+                    <input type="hidden" name="form-name" value="service-request">
+                    <input type="text" name="honeypot" style="display:none" tabindex="-1">
+                    
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact">Phone or Email (how should we reach you?)</label>
+                        <input type="text" id="contact" name="contact" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cemetery">Cemetery Name</label>
+                        <input type="text" id="cemetery" name="cemetery" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="section-lot">Section/Lot Number (if known — okay to leave blank)</label>
+                        <input type="text" id="section-lot" name="section-lot">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="relationship">Your Relationship to the Person Buried</label>
+                        <input type="text" id="relationship" name="relationship" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service-type">What Would You Like Done?</label>
+                        <select id="service-type" name="service-type" required>
+                            <option value="">Choose one…</option>
+                            <option value="cleaning">Cleaning</option>
+                            <option value="decorating">Seasonal Decorating</option>
+                            <option value="plan">Seasonal Care Plan</option>
+                            <option value="not-sure">Not Sure Yet</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="heard-about">How Did You Hear About Us?</label>
+                        <select id="heard-about" name="heard-about" required>
+                            <option value="">Choose one…</option>
+                            <option value="church-bulletin">Church Bulletin</option>
+                            <option value="google">Google Search</option>
+                            <option value="referral">Referral from Friend or Family</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Anything Else We Should Know?</label>
+                        <textarea id="message" name="message" rows="4"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Request Service</button>
+                </form>
+            </div>
+
+            <div class="contact-info-section">
+                <h2>Or Reach Us Directly</h2>
+                
+                <h3>Our Response Promise</h3>
+                <p><strong>We respond within [RESPONSE TIME].</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
+
+                <h3>Our Guarantee</h3>
+                <p>If a visit can't be completed due to cemetery restrictions, access issues, or weather, we'll reschedule it or refund that visit — your choice. No questions asked.</p>
+
+                <h3>Contact Information</h3>
+                <p>
+                    <strong>Phone/Text:</strong> <a href="tel:[PHONE]">[PHONE]</a><br>
+                    <strong>Email:</strong> <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a>
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    </main>
+    
+    <div class="sticky-cta" role="complementary" aria-label="Quick contact">
+        <a href="tel:[PHONE]" class="btn btn-primary">Call [PHONE]</a>
+        <a href="/contact.html" class="btn btn-secondary">Request Service Online</a>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Peace Blooming</h3>
+                <p>Grave Cleaning & Seasonal Flowers<br>Wyandotte & Metro Detroit</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services-and-pricing.html">Services & Pricing</a></li>
+                    <li><a href="/how-it-works.html">How It Works</a></li>
+                    <li><a href="/service-area.html">Service Area</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>
+                    Phone/Text: <a href="tel:[PHONE]">[PHONE]</a><br>
+                    Email: <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a>
+                </p>
+            </div>
+            <div class="footer-section">
+                <p class="copyright">&copy; 2026 Peace Blooming. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/js/site.js"></script>
+</body>
+</html>
