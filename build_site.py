@@ -1259,7 +1259,7 @@ def generate_form_blueprint():
 </head>
 <body>
     <!-- Hidden blueprint for Netlify Forms detection. Not linked from the site. -->
-    <form name="service-request" method="POST" action="/contact-success.html" data-netlify="true" netlify-honeypot="honeypot">
+    <form name="service-request" method="POST" data-netlify="true" netlify-honeypot="honeypot">
         <input type="hidden" name="form-name" value="service-request">
         <input type="text" id="honeypot" name="honeypot" tabindex="-1">
         <input type="text" name="name" required>
@@ -1534,7 +1534,7 @@ def main():
             f.write(html)
 
     # Write Netlify form blueprint (static, not linked)
-    blueprint_path = SITE_ROOT / "__forms.html"
+    blueprint_path = SITE_ROOT / "form-blueprint.html"
     with open(blueprint_path, 'w', encoding='utf-8') as f:
         f.write(generate_form_blueprint())
     
