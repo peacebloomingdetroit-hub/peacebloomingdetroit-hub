@@ -1091,6 +1091,51 @@ def generate_faq_page():
         "Frequently asked questions about grave cleaning and decoration services.",
         schema)
 
+def generate_contact_success_page():
+    """Generate Contact Success page shown after Netlify form submission."""
+    content = """<section class="page-hero">
+        <div class="container">
+            <h1>Thank You</h1>
+            <p>Your service request has been sent. We’ll be in touch soon.</p>
+        </div>
+    </section>
+
+    <section class="contact-content">
+        <div class="container">
+            <div class="contact-form-section">
+                <div class="form-success" style="display:block">
+                    <h3>Your request was received.</h3>
+                    <p>We’ll review the details and get back to you within [RESPONSE TIME]. If you don’t hear from us, please call or email directly.</p>
+                    <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
+                </div>
+
+                <h2>Or Reach Us Directly</h2>
+
+                <h3>Our Response Promise</h3>
+                <p><strong>We respond within [RESPONSE TIME].</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
+
+                <h3>Our Guarantee</h3>
+                <p>We check every cemetery's decoration rules before we visit. If anything we place doesn't follow those rules, we'll replace or fix it at no extra charge.</p>
+            </div>
+
+            <div class="contact-info-section">
+                <h2>Contact Information</h2>
+                <p><strong>Phone:</strong> <a href="tel:[PHONE]">[PHONE]</a></p>
+                <p><strong>Email:</strong> <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a></p>
+                <p><strong>Service Area:</strong> Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor</p>
+            </div>
+        </div>
+    </section>
+    """
+
+    return wrap_in_template(
+        content,
+        "Thank You | Peace Blooming",
+        "Your service request has been sent to Peace Blooming.",
+        None
+    )
+
+
 def generate_contact_page():
     """Generate Contact page."""
     content = """<section class="page-hero">
@@ -1110,7 +1155,7 @@ def generate_contact_page():
                     <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
                 </div>
 
-                <form name="service-request" id="service-request" method="POST" action="/contact.html?success=1" data-netlify="true" netlify-honeypot="honeypot" class="contact-form">
+                <form name="service-request" id="service-request" method="POST" action="/contact-success.html" data-netlify="true" netlify-honeypot="honeypot" class="contact-form">
                     <input type="hidden" name="form-name" value="service-request">
                     <div class="form-group" hidden>
                         <label for="honeypot">Don’t fill this out if you’re human:</label>
@@ -1432,6 +1477,7 @@ def main():
         "about.html": generate_about_page(),
         "faq.html": generate_faq_page(),
         "contact.html": generate_contact_page(),
+        "contact-success.html": generate_contact_success_page(),
         "blog.html": generate_blog_page(),
         "gallery.html": generate_gallery_page(),
     }
