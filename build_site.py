@@ -1155,7 +1155,7 @@ def generate_contact_page():
                     <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
                 </div>
 
-                <form name="service-request" id="service-request" method="POST" action="/contact-success.html" data-netlify="true" netlify-honeypot="honeypot" class="contact-form">
+                <form name="service-request" id="service-request" method="POST" action="/contact-success.html" netlify netlify-honeypot="honeypot" class="contact-form">
                     <input type="hidden" name="form-name" value="service-request">
                     <div class="form-group" hidden>
                         <label for="honeypot">Don’t fill this out if you’re human:</label>
