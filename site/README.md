@@ -118,8 +118,8 @@ In the HTML files, you'll see placeholders in **[brackets]** that need real valu
 
 - `[PHONE]` — Add the phone number in `/index.html`, `/contact.html`, footer, etc.
 - `[EMAIL]` — Set to `hello@peaceblooming.com` in `/contact.html` and footer.
-- `[COVERAGE AMOUNT]` — Insurance limit on `/about.html` and `/faq.html`.
-- `[RESPONSE TIME]` — Response promise on `/contact.html` (e.g., "24 hours").
+- Insurance coverage statement — Already updated to "Metro Detroit area" on `/about.html` and `/faq.html`.
+- Response time — Already set to **24–48 hours** on `/contact.html` and the success page.
 - `[PHOTOS]` — Replace placeholder images with real photos.
 
 Use Find & Replace in your text editor to update `[PHONE]` everywhere at once.

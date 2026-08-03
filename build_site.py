@@ -1025,7 +1025,7 @@ def generate_about_page():
 
             <h2>What You Can Count On</h2>
             <ul class="trust-list">
-                <li><strong>Insured</strong> — we carry general liability insurance. [COVERAGE AMOUNT to be added after binding.]</li>
+                <li><strong>Insured</strong> — we carry general liability insurance covering our work in the Metro Detroit area.</li>
                 <li><strong>We Follow the Rules</strong> — we confirm each cemetery's specific decoration policy before every visit.</li>
                 <li><strong>We Document Everything</strong> — dated photos after every visit, so you always know it was done.</li>
                 <li><strong>We Keep It Personal</strong> — a small, two-person business, not a big operation. You'll always know who's caring for your family's grave.</li>
@@ -1049,7 +1049,7 @@ def generate_faq_page():
     faqs = [
         ("Do I need to be there when you visit?", "No. Most of our clients live out of state, can't drive anymore, or just don't have the time — that's the whole reason this business exists. You'll get photos after every visit so you can see it's done."),
         ("How much does it cost?", "One-time visits: Basic Cleaning runs $60–$90, Cleaning + Decorating runs $90–$140, Cemetery-Compliant Light Cleaning (for strict-policy cemeteries like Mt Carmel, Our Lady of Hope, Holy Sepulchre) runs $75–$110. Seasonal Care Plans start around $180–$250/year (3-visit plan) up to $280–$400/year (5-visit full-year plan). See the full Services & Pricing page for all details — we'll always confirm your exact price before scheduling."),
-        ("Are you insured?", "Yes, we carry general liability insurance. [COVERAGE AMOUNT to be added after binding.]"),
+        ("Are you insured?", "Yes, we carry general liability insurance covering our work in the Metro Detroit area."),
         ("Will my flowers/decorations be allowed?", "Every cemetery has its own rules on containers, seasonal windows, and what's permanently allowed. We check your specific cemetery's policy before every visit, so what we place is allowed to stay."),
         ("What's NOT included?", "Headstone repair, resetting, leveling, or engraving. If we notice a stone that looks damaged or unstable, we'll stop and let you know so you can contact a monument company."),
         ("What if it's raining or there's snow on the ground?", "We generally work March through November. Michigan winters can make travel and stonework impractical, and freezing conditions can risk damaging stone. If we need to reschedule for weather, we'll tell you and there's no charge for the delay."),
@@ -1105,14 +1105,14 @@ def generate_contact_success_page():
             <div class="contact-form-section">
                 <div class="form-success" style="display:block">
                     <h3>Your request was received.</h3>
-                    <p>We’ll review the details and get back to you within [RESPONSE TIME]. If you don’t hear from us, please call or email directly.</p>
+                    <p>We’ll review the details and get back to you within 24–48 hours. If you don’t hear from us, please call or email directly.</p>
                     <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
                 </div>
 
                 <h2>Or Reach Us Directly</h2>
 
                 <h3>Our Response Promise</h3>
-                <p><strong>We respond within [RESPONSE TIME].</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
+                <p><strong>We respond within 24–48 hours.</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
 
                 <h3>Our Guarantee</h3>
                 <p>We check every cemetery's decoration rules before we visit. If anything we place doesn't follow those rules, we'll replace or fix it at no extra charge.</p>
@@ -1151,7 +1151,7 @@ def generate_contact_page():
                 <h2>Request Service</h2>
                 <div class="form-success" id="form-success" hidden>
                     <h3>Thank you — your request was sent.</h3>
-                    <p>We’ll review the details and get back to you within [RESPONSE TIME]. If you don’t hear from us, please call or email directly.</p>
+                    <p>We’ll review the details and get back to you within 24–48 hours. If you don’t hear from us, please call or email directly.</p>
                     <p><a href="/" class="btn btn-secondary">Back to Home</a></p>
                 </div>
 
@@ -1224,7 +1224,7 @@ def generate_contact_page():
                 <h2>Or Reach Us Directly</h2>
                 
                 <h3>Our Response Promise</h3>
-                <p><strong>We respond within [RESPONSE TIME].</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
+                <p><strong>We respond within 24–48 hours.</strong> After we confirm pricing and your cemetery's rules, we'll send you a service agreement to review and sign before we schedule anything.</p>
 
                 <h3>Our Guarantee</h3>
                 <p>If a visit can't be completed due to cemetery restrictions, access issues, or weather, we'll reschedule it or refund that visit — your choice. No questions asked.</p>
@@ -2985,8 +2985,8 @@ In the HTML files, you'll see placeholders in **[brackets]** that need real valu
 
 - `[PHONE]` — Add the phone number in `/index.html`, `/contact.html`, footer, etc.
 - `[EMAIL]` — Set to `hello@peaceblooming.com` in `/contact.html` and footer.
-- `[COVERAGE AMOUNT]` — Insurance limit on `/about.html` and `/faq.html`.
-- `[RESPONSE TIME]` — Response promise on `/contact.html` (e.g., "24 hours").
+- Insurance coverage statement — Already updated to "Metro Detroit area" on `/about.html` and `/faq.html`.
+- Response time — Already set to **24–48 hours** on `/contact.html` and the success page.
 - `[PHOTOS]` — Replace placeholder images with real photos.
 
 Use Find & Replace in your text editor to update `[PHONE]` everywhere at once.
@@ -3037,7 +3037,7 @@ Built with Python. Last updated: {timestamp}
     print(f"  Static assets: CSS, robots.txt, sitemap.xml, netlify.toml")
     print("\nNext steps:")
     print("  1. Preview locally: cd site && python3 -m http.server 8000")
-    print("  2. Update placeholders: [PHONE], [EMAIL], [COVERAGE AMOUNT], [RESPONSE TIME]")
+    print("  2. Update placeholders: [PHONE] (remaining), [EMAIL], [PHOTOS]")
     print("  3. Add real photos to images/ subdirectories")
     print("  4. Commit changes from the project root and push to GitHub")
     print("  5. Netlify auto-deploys the site/ folder")
