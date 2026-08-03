@@ -25,8 +25,12 @@ CSS_DIR.mkdir(exist_ok=True)
 SERVICE_AREA_DIR.mkdir(exist_ok=True)
 
 # Subdirectories for images
-for subdir in ["home", "services", "about", "service-area", "logo"]:
+for subdir in ["home", "services", "about", "service-area", "logo", "social"]:
     (IMAGES_DIR / subdir).mkdir(exist_ok=True)
+
+# Third-party integration placeholders (fill in before launch)
+GA_MEASUREMENT_ID = ""  # e.g. "G-XXXXXXXXXX"
+GOOGLE_SEARCH_CONSOLE_TAG = ""  # e.g. "<meta name="google-site-verification" content="...">"
 
 # ============================================================================
 # READ SOURCE DOCUMENTS
@@ -243,7 +247,8 @@ CITIES = [
 
 def create_placeholder_image(filepath, text, width=1600, height=900, bg_color=(230, 240, 230)):
     """Create a placeholder image with text."""
-    Path(filepath).parent.mkdir(parents=True, exist_ok=True)
+    filepath = Path(filepath)
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     
     # Create image with gradient-like effect
     img = Image.new('RGB', (width, height), bg_color)
@@ -264,6 +269,62 @@ def create_placeholder_image(filepath, text, width=1600, height=900, bg_color=(2
     
     draw.text((x, y), text, fill=(100, 120, 100), font=font)
     img.save(filepath, 'PNG')
+    # Also generate a WebP version for modern browsers
+    generate_webp_version(filepath)
+
+
+def generate_webp_version(source_path):
+    """Create a WebP version of an image if PIL supports it, next to the source."""
+    source_path = Path(source_path)
+    if not source_path.exists():
+        return
+    try:
+        webp_path = source_path.with_suffix(".webp")
+        with Image.open(source_path) as img:
+            # Convert RGBA to RGB for WebP if needed, with white background
+            if img.mode == 'RGBA':
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                background.paste(img, mask=img.split()[3])
+                img = background
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+            img.save(webp_path, 'WEBP', quality=85, method=6)
+    except Exception as e:
+        # WebP support may not be available; silently skip if so
+        print(f"  ⚠ Could not create WebP for {source_path}: {e}")
+
+
+def generate_webp_for_existing_images():
+    """Generate WebP versions for all existing JPG/PNG images in the site images directory."""
+    if not IMAGES_DIR.exists():
+        return
+    for img_path in IMAGES_DIR.rglob("*"):
+        if img_path.is_file() and img_path.suffix.lower() in (".jpg", ".jpeg", ".png"):
+            generate_webp_version(img_path)
+
+
+def picture_tag(src, alt, css_class=None, loading="lazy", width=None, height=None, figcaption=None):
+    """
+    Generate a <picture> element with WebP source and original fallback.
+    Optionally wraps in a <figure> with figcaption.
+    """
+    src = str(src)
+    webp_src = src[:src.rfind(".")] + ".webp" if "." in src else src + ".webp"
+    class_attr = f' class="{css_class}"' if css_class else ""
+    loading_attr = f' loading="{loading}"' if loading else ""
+    width_attr = f' width="{width}"' if width else ""
+    height_attr = f' height="{height}"' if height else ""
+    img_tag = f'<img src="{src}" alt="{alt}"{class_attr}{loading_attr}{width_attr}{height_attr}>'
+    picture = f"""<picture>
+            <source srcset="{webp_src}" type="image/webp">
+            {img_tag}
+        </picture>"""
+    if figcaption:
+        return f"""<figure class="gallery-item">
+            {picture}
+            <figcaption>{figcaption}</figcaption>
+        </figure>"""
+    return picture
 
 def generate_logo_variants(source_path=None):
     """Generate logo.png, favicon.png, and apple-touch-icon.png from the supplied mark image.
@@ -284,6 +345,7 @@ def generate_logo_variants(source_path=None):
             font = ImageFont.load_default()
         draw.text((20, 20), "Peace Blooming", fill=(100, 130, 100, 255), font=font)
         img.save(str(logo_path), 'PNG')
+        generate_webp_version(logo_path)
 
         favicon = Image.new('RGBA', (512, 512), (230, 240, 230, 255))
         draw = ImageDraw.Draw(favicon)
@@ -293,6 +355,17 @@ def generate_logo_variants(source_path=None):
             font = ImageFont.load_default()
         draw.text((150, 160), "❀", fill=(100, 130, 100, 255), font=font)
         favicon.save(str(favicon_path), 'PNG')
+        generate_webp_version(favicon_path)
+
+        apple = Image.new('RGBA', (180, 180), (230, 240, 230, 255))
+        draw = ImageDraw.Draw(apple)
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 48)
+        except Exception:
+            font = ImageFont.load_default()
+        draw.text((45, 55), "❀", fill=(100, 130, 100, 255), font=font)
+        apple.save(str(apple_path), 'PNG')
+        generate_webp_version(apple_path)
         return
 
     src = Image.open(source_path).convert('RGBA')
@@ -337,16 +410,19 @@ def generate_logo_variants(source_path=None):
     logo = Image.new('RGBA', (800, 800), (0, 0, 0, 0))
     center_paste(logo, green_mark, pad_frac=0.10)
     logo.save(str(logo_path), 'PNG')
+    generate_webp_version(logo_path)
 
     # Favicon: dark green background with white mark
     favicon = Image.new('RGBA', (512, 512), brand_green)
     center_paste(favicon, white_mark, pad_frac=0.14)
     favicon.save(str(favicon_path), 'PNG')
+    generate_webp_version(favicon_path)
 
     # Apple touch icon: same as favicon at 180x180
     apple = Image.new('RGBA', (180, 180), brand_green)
     center_paste(apple, white_mark, pad_frac=0.14)
     apple.save(str(apple_path), 'PNG')
+    generate_webp_version(apple_path)
 
 def generate_placeholder_images():
     """Generate all placeholder images."""
@@ -369,6 +445,11 @@ def generate_placeholder_images():
             continue
         create_placeholder_image(str(filepath), text)
 
+    # Generate social sharing image (1200x630 for Open Graph / Twitter Cards)
+    social_path = IMAGES_DIR / "social" / "default.jpg"
+    if not social_path.exists():
+        create_placeholder_image(str(social_path), "Peace Blooming", width=1200, height=630, bg_color=(44, 62, 50))
+
     # Generate logo, favicon, and apple-touch-icon from the provided mark
     generate_logo_variants()
 
@@ -383,12 +464,26 @@ BASE_TEMPLATE = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <meta name="description" content="{description}">
+    <link rel="canonical" href="{canonical_url}">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{description}">
+    <meta property="og:image" content="{og_image}">
+    <meta property="og:url" content="{canonical_url}">
+    <meta property="og:type" content="{og_type}">
+    <meta property="og:site_name" content="Peace Blooming">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{title}">
+    <meta name="twitter:description" content="{description}">
+    <meta name="twitter:image" content="{og_image}">
     <link rel="icon" type="image/png" href="/images/logo/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+{analytics}
+{hreflang}
     {schema}
 </head>
 <body>
@@ -397,7 +492,10 @@ BASE_TEMPLATE = """<!DOCTYPE html>
         <nav class="navbar" aria-label="Main navigation">
             <div class="nav-container">
                 <a href="/" class="logo" aria-label="Peace Blooming home">
-                    <img src="/images/logo/logo.png" alt="" class="logo-img">
+                    <picture>
+                        <source srcset="/images/logo/logo.webp" type="image/webp">
+                        <img src="/images/logo/logo.png" alt="Peace Blooming logo" class="logo-img">
+                    </picture>
                     <span>Peace Blooming</span>
                 </a>
                 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
@@ -428,6 +526,25 @@ BASE_TEMPLATE = """<!DOCTYPE html>
         <a href="/contact.html" class="btn btn-secondary">Request Service Online</a>
     </div>
     
+    <section class="newsletter-signup" aria-label="Email reminders">
+        <div class="container">
+            <h2>Get Seasonal Reminders</h2>
+            <p>We'll send a short email before holidays like Memorial Day and Christmas so you can reserve a visit before slots fill up.</p>
+            <form name="newsletter" method="POST" action="/newsletter-success.html" data-netlify="true" netlify-honeypot="newsletter-honeypot" class="newsletter-form">
+                <input type="hidden" name="form-name" value="newsletter">
+                <div class="form-group" hidden>
+                    <label for="newsletter-honeypot">Don’t fill this out if you’re human:</label>
+                    <input type="text" id="newsletter-honeypot" name="newsletter-honeypot" tabindex="-1">
+                </div>
+                <div class="newsletter-fields">
+                    <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+                    <button type="submit" class="btn btn-secondary">Subscribe</button>
+                </div>
+                <p class="privacy-note">We never share your email. Unsubscribe anytime. <a href="/privacy-policy.html">Privacy Policy</a></p>
+            </form>
+        </div>
+    </section>
+    
     <footer>
         <div class="footer-container">
             <div class="footer-section">
@@ -441,6 +558,7 @@ BASE_TEMPLATE = """<!DOCTYPE html>
                     <li><a href="/services-and-pricing.html">Services & Pricing</a></li>
                     <li><a href="/how-it-works.html">How It Works</a></li>
                     <li><a href="/service-area.html">Service Area</a></li>
+                    <li><a href="/privacy-policy.html">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -460,7 +578,31 @@ BASE_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def wrap_in_template(content, title, description, schema_json=None):
+def build_analytics_tags():
+    """Build GA4 and Search Console verification tags if configured."""
+    tags = []
+    if GOOGLE_SEARCH_CONSOLE_TAG:
+        tags.append(GOOGLE_SEARCH_CONSOLE_TAG)
+    if GA_MEASUREMENT_ID:
+        tags.append(f"""    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', '{GA_MEASUREMENT_ID}');
+    </script>""")
+    return "\n".join(tags)
+
+def build_hreflang_tags(canonical_url):
+    """Build hreflang alternates for English-US and x-default fallback."""
+    if not canonical_url:
+        return ""
+    x_default = "https://www.peaceblooming.com/"
+    return f"""    <link rel="alternate" hreflang="en-us" href="{canonical_url}">
+    <link rel="alternate" hreflang="x-default" href="{x_default}">"""
+
+def wrap_in_template(content, title, description, schema_json=None, canonical_url="", og_image="", og_type="website"):
     """Wrap content in the base template. Accepts a single schema dict or a list of schemas."""
     schema_tag = ""
     if schema_json:
@@ -472,9 +614,20 @@ def wrap_in_template(content, title, description, schema_json=None):
         else:
             schema_tag = f'    <script type="application/ld+json">\n{json.dumps(schema_json, indent=6)}\n    </script>'
 
+    if not og_image:
+        og_image = "https://www.peaceblooming.com/images/social/default.jpg"
+
+    analytics_tag = build_analytics_tags()
+    hreflang_tag = build_hreflang_tags(canonical_url)
+
     return BASE_TEMPLATE.format(
         title=title,
         description=description,
+        canonical_url=canonical_url,
+        og_image=og_image,
+        og_type=og_type,
+        analytics=analytics_tag,
+        hreflang=hreflang_tag,
         schema=schema_tag,
         content=content
     )
@@ -522,6 +675,35 @@ def create_faq_schema(faqs):
             }
             for q, a in faqs
         ]
+    }
+
+def create_home_breadcrumb_schema():
+    """Create BreadcrumbList schema for the homepage."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.peaceblooming.com/"}
+        ]
+    }
+
+def create_breadcrumb_schema(items):
+    """
+    Create a BreadcrumbList schema from a list of (name, url) tuples.
+    Example: [("Home", "/"), ("Services & Pricing", "/services-and-pricing.html")]
+    """
+    element_list = []
+    for position, (name, url) in enumerate(items, start=1):
+        element_list.append({
+            "@type": "ListItem",
+            "position": position,
+            "name": name,
+            "item": f"https://www.peaceblooming.com{url}" if url.startswith("/") else url
+        })
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": element_list
     }
 
 def create_cemetery_schema(cemetery_name, city):
@@ -595,7 +777,10 @@ def generate_home_page():
             </div>
         </div>
         <div class="hero-image-wrapper">
-            <img src="/images/home/hero.jpg" alt="Well-maintained grave with fresh flowers" class="hero-image" loading="eager">
+            <picture>
+                <source srcset="/images/home/hero.webp" type="image/webp">
+                <img src="/images/home/hero.jpg" alt="Well-maintained grave with fresh flowers" class="hero-image" loading="eager">
+            </picture>
         </div>
     </section>
 
@@ -613,7 +798,10 @@ def generate_home_page():
                 <p>That's why I started Peace Blooming. We treat every grave like it's our own family's.</p>
             </div>
             <div class="story-photo">
-                <img src="/images/about/owners.jpg" alt="Peace Blooming owners" loading="lazy">
+                <picture>
+                    <source srcset="/images/about/owners.webp" type="image/webp">
+                    <img src="/images/about/owners.jpg" alt="Peace Blooming owners" loading="lazy">
+                </picture>
                 <p class="caption">The two people who'll be at your loved one's grave.</p>
             </div>
         </div>
@@ -696,7 +884,10 @@ def generate_home_page():
             <h2>What the Work Looks Like</h2>
             <div class="work-grid">
                 <figure class="work-photo">
-                    <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave after seasonal decorating" loading="lazy">
+                    <picture>
+                        <source srcset="/images/home/before-after-decorating-01-after.webp" type="image/webp">
+                        <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave after seasonal decorating" loading="lazy">
+                    </picture>
                     <figcaption>Winter decorating after a fresh visit.</figcaption>
                 </figure>
                 <div class="work-text">
@@ -741,11 +932,12 @@ def generate_home_page():
     </section>
     """
     
-    schema = [create_local_business_schema(), create_home_faq_schema()]
+    schema = [create_local_business_schema(), create_home_faq_schema(), create_home_breadcrumb_schema()]
     return wrap_in_template(content, 
         "Peace Blooming | Grave Cleaning & Seasonal Flowers",
         "Grave cleaning and seasonal flower service for families in Metro Detroit, Downriver, and Ann Arbor.",
-        schema)
+        schema,
+        canonical_url="https://www.peaceblooming.com/")
 
 def generate_services_page():
     """Generate Services & Pricing page."""
@@ -860,7 +1052,13 @@ def generate_services_page():
         <div class="container">
             <h2>Real Seasonal Decorating</h2>
             <figure class="work-photo">
-                <img src="/images/services/decorated-grave-01.jpg" alt="A grave decorated with Christmas poinsettias" loading="lazy">
+                <picture>
+                    <source srcset="/images/services/decorated-grave-01.webp" type="image/webp">
+                    <picture>
+                        <source srcset="/images/services/decorated-grave-01.webp" type="image/webp">
+                        <img src="/images/services/decorated-grave-01.jpg" alt="A grave decorated with Christmas poinsettias" loading="lazy">
+                    </picture>
+                </picture>
                 <figcaption>Christmas decorating at a local cemetery.</figcaption>
             </figure>
             <p class="centered"><a href="/contact.html" class="btn btn-primary">Schedule a Holiday Visit</a></p>
@@ -868,10 +1066,18 @@ def generate_services_page():
     </section>
     """
     
+    schema = [
+        create_services_schema(),
+        create_breadcrumb_schema([
+            ("Home", "/"),
+            ("Services & Pricing", "/services-and-pricing.html")
+        ])
+    ]
     return wrap_in_template(content,
         "Services & Pricing | Peace Blooming",
         "Clear, upfront grave cleaning and decorating pricing for Metro Detroit, Downriver, and Ann Arbor.",
-        create_services_schema())
+        schema,
+        canonical_url="https://www.peaceblooming.com/services-and-pricing.html")
 
 def generate_how_it_works_page():
     """Generate How It Works page."""
@@ -918,10 +1124,15 @@ def generate_how_it_works_page():
     </section>
     """
     
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("How It Works", "/how-it-works.html")
+    ])
     return wrap_in_template(content,
         "How It Works | Peace Blooming",
         "Step-by-step process for grave cleaning and seasonal flower service.",
-        None)
+        schema,
+        canonical_url="https://www.peaceblooming.com/how-it-works.html")
 
 def generate_service_area_index():
     """Generate Service Area index page."""
@@ -999,10 +1210,15 @@ def generate_service_area_index():
     </section>
     """
     
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Service Area", "/service-area.html")
+    ])
     return wrap_in_template(content,
         "Service Area | Peace Blooming",
         "Grave cleaning service in Metro Detroit, Downriver, and Metro Ann Arbor. Find your cemetery.",
-        None)
+        schema,
+        canonical_url="https://www.peaceblooming.com/service-area.html")
 
 def generate_about_page():
     """Generate About page."""
@@ -1020,7 +1236,10 @@ def generate_about_page():
             </div>
 
             <div class="about-image">
-                <img src="/images/about/owners.jpg" alt="Peace Blooming owners" class="about-photo" loading="lazy">
+                <picture>
+                    <source srcset="/images/about/owners.webp" type="image/webp">
+                    <img src="/images/about/owners.jpg" alt="Peace Blooming owners" class="about-photo" loading="lazy">
+                </picture>
             </div>
 
             <h2>What You Can Count On</h2>
@@ -1039,10 +1258,15 @@ def generate_about_page():
     </section>
     """
     
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("About", "/about.html")
+    ])
     return wrap_in_template(content,
         "About | Peace Blooming",
         "Learn about Peace Blooming's small, personal grave cleaning service in Michigan.",
-        None)
+        schema,
+        canonical_url="https://www.peaceblooming.com/about.html")
 
 def generate_faq_page():
     """Generate FAQ page."""
@@ -1085,11 +1309,18 @@ def generate_faq_page():
     </section>
     """
     
-    schema = create_faq_schema(faqs)
+    schema = [
+        create_faq_schema(faqs),
+        create_breadcrumb_schema([
+            ("Home", "/"),
+            ("FAQ", "/faq.html")
+        ])
+    ]
     return wrap_in_template(content,
         "FAQ | Peace Blooming",
         "Frequently asked questions about grave cleaning and decoration services.",
-        schema)
+        schema,
+        canonical_url="https://www.peaceblooming.com/faq.html")
 
 def generate_contact_success_page():
     """Generate Contact Success page shown after Netlify form submission."""
@@ -1128,12 +1359,16 @@ def generate_contact_success_page():
     </section>
     """
 
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Contact", "/contact.html")
+    ])
     return wrap_in_template(
         content,
         "Thank You | Peace Blooming",
         "Your service request has been sent to Peace Blooming.",
-        None
-    )
+        schema,
+        canonical_url="https://www.peaceblooming.com/contact-success.html")
 
 
 def generate_contact_page():
@@ -1170,7 +1405,8 @@ def generate_contact_page():
 
                     <div class="form-group">
                         <label for="contact">Phone or Email (how should we reach you?)</label>
-                        <input type="text" id="contact" name="contact" required>
+                        <input type="text" id="contact" name="contact" required pattern=".*([0-9]{3}|@).*" title="Please enter a valid phone number or email address">
+                        <span class="form-hint">Example: 555-123-4567 or hello@example.com</span>
                     </div>
 
                     <div class="form-group">
@@ -1239,10 +1475,15 @@ def generate_contact_page():
     </section>
     """
     
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Contact", "/contact.html")
+    ])
     return wrap_in_template(content,
         "Contact | Peace Blooming",
         "Contact Peace Blooming to request grave cleaning or seasonal decorating service.",
-        None)
+        schema,
+        canonical_url="https://www.peaceblooming.com/contact.html")
 
 def generate_form_blueprint():
     """Generate a hidden static HTML form blueprint for Netlify Forms detection.
@@ -1256,6 +1497,7 @@ def generate_form_blueprint():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Form Blueprint</title>
 </head>
 <body>
@@ -1291,6 +1533,90 @@ def generate_form_blueprint():
 """
 
 
+def generate_404_page():
+    """Generate a custom 404 error page."""
+    content = """<section class="page-hero">
+        <div class="container">
+            <h1>Page Not Found</h1>
+            <p>Sorry - we cannot find that page. It may have moved or the link might be outdated.</p>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <div class="cta-buttons">
+                <a href="/" class="btn btn-primary">Back to Home</a>
+                <a href="/contact.html" class="btn btn-secondary">Request Service</a>
+                <a href="/service-area.html" class="btn btn-secondary">Find Your Cemetery</a>
+            </div>
+        </div>
+    </section>
+    """
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Page Not Found", "/404.html")
+    ])
+    return wrap_in_template(content,
+        "Page Not Found | Peace Blooming",
+        "Sorry, we can’t find that page. Return to Peace Blooming home or request service.",
+        schema,
+        canonical_url="https://www.peaceblooming.com/404.html")
+
+def generate_privacy_page():
+    """Generate Privacy Policy page."""
+    content = """<section class="page-hero">
+        <div class="container">
+            <h1>Privacy Policy</h1>
+            <p>How Peace Blooming collects, uses, and protects your information.</p>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <p><strong>Effective date:</strong> August 2026</p>
+
+            <h2>1. Information We Collect</h2>
+            <p>When you request service through our contact form, we collect your name, contact information, cemetery details, and the details you provide about the service you need. If you subscribe to seasonal reminders, we collect only your email address.</p>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We use your information only to respond to your request, schedule service, communicate with you about your loved one grave, and send seasonal reminders if you opted in. We do not sell, rent, or share your information with third parties for marketing.</p>
+
+            <h2>3. How We Protect Your Information</h2>
+            <p>Your information is transmitted securely and stored with limited access. We use trusted service providers (including our website host and form processor) that maintain appropriate security measures.</p>
+
+            <h2>4. Text and Email Communications</h2>
+            <p>If you provide a phone number or email address, we may contact you to confirm service details, share updates, or arrange payment. Message and data rates may apply for text messages. You can opt out of non-essential messages at any time by replying STOP or emailing us.</p>
+
+            <h2>5. Cookies and Analytics</h2>
+            <p>We may use Google Analytics or similar tools to understand how visitors use our website. These tools may use cookies. You can control cookies through your browser settings.</p>
+
+            <h2>6. Your Choices</h2>
+            <p>You may request to see, update, or delete your information at any time by contacting us at <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a>.</p>
+
+            <h2>7. Changes to This Policy</h2>
+            <p>We may update this policy as our services or the law changes. The latest version will always be posted on this page.</p>
+
+            <h2>8. Contact Us</h2>
+            <p>Peace Blooming<br>Email: <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a><br>Phone/Text: <a href="tel:[PHONE]">[PHONE]</a></p>
+
+            <div class="cta-buttons">
+                <a href="/contact.html" class="btn btn-primary">Request Service</a>
+                <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </section>
+    """
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Privacy Policy", "/privacy-policy.html")
+    ])
+    return wrap_in_template(content,
+        "Privacy Policy | Peace Blooming",
+        "Peace Blooming privacy policy: how we collect, use, and protect your information.",
+        schema,
+        canonical_url="https://www.peaceblooming.com/privacy-policy.html")
+
+
 def generate_blog_page():
     """Generate blog placeholder page."""
     content = """<section class="page-hero">
@@ -1313,7 +1639,11 @@ def generate_blog_page():
     return wrap_in_template(content,
         "Blog | Peace Blooming",
         "Coming soon: articles on grave care, headstone cleaning, and cemetery traditions.",
-        None)
+        create_breadcrumb_schema([
+            ("Home", "/"),
+            ("Blog", "/blog.html")
+        ]),
+        canonical_url="https://www.peaceblooming.com/blog.html")
 
 def generate_gallery_page():
     """Generate gallery page with available real work photos."""
@@ -1328,15 +1658,24 @@ def generate_gallery_page():
         <div class="container">
             <div class="gallery-grid">
                 <figure class="gallery-item">
-                    <img src="/images/home/hero.jpg" alt="A well-maintained grave with fresh spring flowers" loading="lazy">
+                    <picture>
+                        <source srcset="/images/home/hero.webp" type="image/webp">
+                        <img src="/images/home/hero.jpg" alt="A well-maintained grave with fresh spring flowers" loading="lazy">
+                    </picture>
                     <figcaption>Spring visit — fresh flowers and a clean stone.</figcaption>
                 </figure>
                 <figure class="gallery-item">
-                    <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave decorated with a winter arrangement" loading="lazy">
+                    <picture>
+                        <source srcset="/images/home/before-after-decorating-01-after.webp" type="image/webp">
+                        <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave decorated with a winter arrangement" loading="lazy">
+                    </picture>
                     <figcaption>Winter decorating after a fresh visit.</figcaption>
                 </figure>
                 <figure class="gallery-item">
-                    <img src="/images/services/decorated-grave-01.jpg" alt="A grave decorated with Christmas poinsettias" loading="lazy">
+                    <picture>
+                        <source srcset="/images/services/decorated-grave-01.webp" type="image/webp">
+                        <img src="/images/services/decorated-grave-01.jpg" alt="A grave decorated with Christmas poinsettias" loading="lazy">
+                    </picture>
                     <figcaption>Christmas decorating at a local cemetery.</figcaption>
                 </figure>
             </div>
@@ -1346,10 +1685,48 @@ def generate_gallery_page():
     </section>
     """
 
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Gallery", "/gallery.html")
+    ])
     return wrap_in_template(content,
         "Gallery | Peace Blooming",
         "Before-and-after photos of grave cleaning and seasonal decorating in Michigan.",
-        None)
+        schema,
+        canonical_url="https://www.peaceblooming.com/gallery.html")
+
+def generate_newsletter_success_page():
+    """Generate newsletter signup success page."""
+    content = """<section class="page-hero">
+        <div class="container">
+            <h1>You Are Subscribed</h1>
+            <p>Thank you for signing up for seasonal reminders from Peace Blooming.</p>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <p>We will email you a few days before major holidays like Easter, Memorial Day, All Souls Day, and Christmas so you can reserve a visit before slots fill up.</p>
+            <p>We never share your email, and you can unsubscribe anytime by replying to any message.</p>
+
+            <div class="cta-buttons">
+                <a href="/" class="btn btn-primary">Back to Home</a>
+                <a href="/services-and-pricing.html" class="btn btn-secondary">See Pricing</a>
+                <a href="/contact.html" class="btn btn-secondary">Request Service</a>
+            </div>
+        </div>
+    </section>
+    """
+    schema = create_breadcrumb_schema([
+        ("Home", "/"),
+        ("Newsletter Subscribed", "/newsletter-success.html")
+    ])
+    return wrap_in_template(content,
+        "Subscribed | Peace Blooming",
+        "You are subscribed to Peace Blooming seasonal reminders.",
+        schema,
+        canonical_url="https://www.peaceblooming.com/newsletter-success.html")
+
 
 def generate_cemetery_page(cemetery_slug, cemetery_name, city):
     """Generate a dedicated cemetery page."""
@@ -1383,7 +1760,10 @@ def generate_cemetery_page(cemetery_slug, cemetery_name, city):
     # Cemetery photo: if a real image exists at service-area/{slug}.jpg, use it
     photo_path = IMAGES_DIR / "service-area" / f"{cemetery_slug}.jpg"
     photo_html = f'''<figure class="cemetery-photo">
-                <img src="/images/service-area/{cemetery_slug}.jpg" alt="{cemetery_name} grounds" loading="lazy">
+                <picture>
+                    <source srcset="/images/service-area/{cemetery_slug}.webp" type="image/webp">
+                    <img src="/images/service-area/{cemetery_slug}.jpg" alt="{cemetery_name} grounds" loading="lazy">
+                </picture>
             </figure>''' if photo_path.exists() else ""
 
     content = f"""<section class="page-hero">
@@ -1434,7 +1814,8 @@ def generate_cemetery_page(cemetery_slug, cemetery_name, city):
         content,
         f"{cemetery_name} | Peace Blooming",
         f"Grave cleaning and seasonal decorating at {cemetery_name} in {city}, MI.",
-        [business_ref, cemetery_schema, service_schema, breadcrumb_schema]
+        [business_ref, cemetery_schema, service_schema, breadcrumb_schema],
+        canonical_url=page_url
     )
 
 def generate_city_page(city_slug, city_name, region):
@@ -1508,7 +1889,8 @@ def generate_city_page(city_slug, city_name, region):
         content,
         f"{city_name}, MI | Peace Blooming",
         f"Grave cleaning and seasonal decorating service in {city_name}, MI.",
-        [business_ref, service_schema, breadcrumb_schema]
+        [business_ref, service_schema, breadcrumb_schema],
+        canonical_url=page_url
     )
 
 # ============================================================================
@@ -1523,6 +1905,10 @@ def main():
     print("  → Creating placeholder images...")
     generate_placeholder_images()
     
+    # Generate WebP versions for all existing images (placeholder and real photos)
+    print("  → Generating WebP image variants...")
+    generate_webp_for_existing_images()
+    
     # Generate core pages
     print("  → Generating core pages...")
     pages = {
@@ -1536,6 +1922,9 @@ def main():
         "contact-success.html": generate_contact_success_page(),
         "blog.html": generate_blog_page(),
         "gallery.html": generate_gallery_page(),
+        "404.html": generate_404_page(),
+        "privacy-policy.html": generate_privacy_page(),
+        "newsletter-success.html": generate_newsletter_success_page(),
     }
     
     for filename, html in pages.items():
@@ -1590,6 +1979,16 @@ def main():
 
 html {
     scroll-behavior: smooth;
+}
+
+img, picture {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+picture img {
+    width: 100%;
 }
 
 .skip-link {
@@ -2252,6 +2651,24 @@ a:focus-visible {
     box-shadow: none;
 }
 
+.form-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+}
+
+.form-group input:invalid:not(:placeholder-shown),
+.form-group select:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown) {
+    border-color: #c44;
+}
+
+.newsletter-form.is-submitting {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 /* Cities Grid */
 .cities-grid {
     display: grid;
@@ -2454,12 +2871,68 @@ a:focus-visible {
     text-align: center;
 }
 
+/* Newsletter signup */
+.newsletter-signup {
+    background-color: var(--sage-soft);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.newsletter-signup h2 {
+    color: var(--green-dark);
+    border: none;
+    margin-bottom: 0.5rem;
+}
+
+.newsletter-signup p {
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    color: var(--text);
+}
+
+.newsletter-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.newsletter-fields {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: stretch;
+    margin-bottom: 0.75rem;
+}
+
+.newsletter-fields input[type="email"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+}
+
+.newsletter-fields .btn {
+    white-space: nowrap;
+}
+
+.newsletter-form .privacy-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0;
+}
+
+.newsletter-form .privacy-note a {
+    color: var(--green-dark);
+    text-decoration: underline;
+}
+
 /* Footer */
 footer {
     background-color: var(--green-dark);
     color: var(--white);
     padding: 3rem 2rem;
-    margin-top: 4rem;
 }
 
 .footer-container {
@@ -2649,6 +3122,14 @@ footer {
         font-size: 0.9rem;
     }
 
+    .newsletter-fields {
+        flex-direction: column;
+    }
+
+    .newsletter-fields .btn {
+        width: 100%;
+    }
+
     .footer-container {
         grid-template-columns: 1fr;
     }
@@ -2695,6 +3176,10 @@ footer {
     .sticky-cta .btn {
         font-size: 0.85rem;
         padding: 0.6rem 0.5rem;
+    }
+
+    .newsletter-signup {
+        padding: 2rem 1.5rem;
     }
 }
 """
@@ -2762,6 +3247,25 @@ footer {
             serviceForm.setAttribute('hidden', '');
         }
     }
+
+    // Client-side validation helpers
+    const contactInput = document.getElementById('contact');
+    if (contactInput) {
+        contactInput.addEventListener('blur', function () {
+            const value = this.value.trim();
+            const hasPhone = /\\d{3}/.test(value);
+            const hasEmail = value.includes('@') && /.+@.+\\..+/.test(value);
+            this.setCustomValidity((hasPhone || hasEmail) ? '' : 'Please enter a valid phone number or email address');
+        });
+    }
+
+    // Newsletter signup success message
+    const newsletterForm = document.querySelector('form[name="newsletter"]');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function () {
+            newsletterForm.classList.add('is-submitting');
+        });
+    }
 })();
 """
     js_path = js_dir / "site.js"
@@ -2810,6 +3314,8 @@ Sitemap: https://www.peaceblooming.com/sitemap.xml
         "/contact.html",
         "/blog.html",
         "/gallery.html",
+        "/privacy-policy.html",
+        "/newsletter-success.html",
     ]
     
     for slug, _, _ in CEMETERIES:
@@ -2851,6 +3357,11 @@ Sitemap: https://www.peaceblooming.com/sitemap.xml
   from = "/index.html"
   to = "/"
   status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
 
 [[headers]]
   for = "/*"
@@ -2934,7 +3445,7 @@ To preview the site on your computer before deploying:
 
 1. Open Terminal and navigate to this folder:
    ```bash
-   cd /Users/themachine2.0/Desktop/AI/Peace\ Blooming/3-Website/site
+   cd /Users/themachine2.0/Desktop/AI/Peace Blooming/3-Website/site
    ```
 
 2. Start a simple web server:
@@ -3053,7 +3564,7 @@ Built with Python. Last updated: {timestamp}
     
     print("\n✓ Site generation complete!")
     print(f"  Location: {SITE_ROOT}")
-    print(f"  Pages: 38 (9 core + 9 cemetery + 20 city)")
+    print(f"  Pages: 41 (12 core + 9 cemetery + 20 city)")
     print(f"  Images: 10 placeholder files")
     print(f"  Static assets: CSS, robots.txt, sitemap.xml, netlify.toml")
     print("\nNext steps:")

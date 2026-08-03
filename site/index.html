@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peace Blooming | Grave Cleaning & Seasonal Flowers</title>
     <meta name="description" content="Grave cleaning and seasonal flower service for families in Metro Detroit, Downriver, and Ann Arbor.">
+    <link rel="canonical" href="https://www.peaceblooming.com/">
+    <meta property="og:title" content="Peace Blooming | Grave Cleaning & Seasonal Flowers">
+    <meta property="og:description" content="Grave cleaning and seasonal flower service for families in Metro Detroit, Downriver, and Ann Arbor.">
+    <meta property="og:image" content="https://www.peaceblooming.com/images/social/default.jpg">
+    <meta property="og:url" content="https://www.peaceblooming.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Peace Blooming">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Peace Blooming | Grave Cleaning & Seasonal Flowers">
+    <meta name="twitter:description" content="Grave cleaning and seasonal flower service for families in Metro Detroit, Downriver, and Ann Arbor.">
+    <meta name="twitter:image" content="https://www.peaceblooming.com/images/social/default.jpg">
     <link rel="icon" type="image/png" href="/images/logo/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="alternate" hreflang="en-us" href="https://www.peaceblooming.com/">
+    <link rel="alternate" hreflang="x-default" href="https://www.peaceblooming.com/">
         <script type="application/ld+json">
 {
       "@context": "https://schema.org",
@@ -77,6 +92,20 @@
       ]
 }
     </script>
+    <script type="application/ld+json">
+{
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+            {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.peaceblooming.com/"
+            }
+      ]
+}
+    </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -84,7 +113,10 @@
         <nav class="navbar" aria-label="Main navigation">
             <div class="nav-container">
                 <a href="/" class="logo" aria-label="Peace Blooming home">
-                    <img src="/images/logo/logo.png" alt="" class="logo-img">
+                    <picture>
+                        <source srcset="/images/logo/logo.webp" type="image/webp">
+                        <img src="/images/logo/logo.png" alt="Peace Blooming logo" class="logo-img">
+                    </picture>
                     <span>Peace Blooming</span>
                 </a>
                 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
@@ -119,7 +151,10 @@
             </div>
         </div>
         <div class="hero-image-wrapper">
-            <img src="/images/home/hero.jpg" alt="Well-maintained grave with fresh flowers" class="hero-image" loading="eager">
+            <picture>
+                <source srcset="/images/home/hero.webp" type="image/webp">
+                <img src="/images/home/hero.jpg" alt="Well-maintained grave with fresh flowers" class="hero-image" loading="eager">
+            </picture>
         </div>
     </section>
 
@@ -137,7 +172,10 @@
                 <p>That's why I started Peace Blooming. We treat every grave like it's our own family's.</p>
             </div>
             <div class="story-photo">
-                <img src="/images/about/owners.jpg" alt="Peace Blooming owners" loading="lazy">
+                <picture>
+                    <source srcset="/images/about/owners.webp" type="image/webp">
+                    <img src="/images/about/owners.jpg" alt="Peace Blooming owners" loading="lazy">
+                </picture>
                 <p class="caption">The two people who'll be at your loved one's grave.</p>
             </div>
         </div>
@@ -220,7 +258,10 @@
             <h2>What the Work Looks Like</h2>
             <div class="work-grid">
                 <figure class="work-photo">
-                    <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave after seasonal decorating" loading="lazy">
+                    <picture>
+                        <source srcset="/images/home/before-after-decorating-01-after.webp" type="image/webp">
+                        <img src="/images/home/before-after-decorating-01-after.jpg" alt="A grave after seasonal decorating" loading="lazy">
+                    </picture>
                     <figcaption>Winter decorating after a fresh visit.</figcaption>
                 </figure>
                 <div class="work-text">
@@ -271,6 +312,25 @@
         <a href="/contact.html" class="btn btn-secondary">Request Service Online</a>
     </div>
     
+    <section class="newsletter-signup" aria-label="Email reminders">
+        <div class="container">
+            <h2>Get Seasonal Reminders</h2>
+            <p>We'll send a short email before holidays like Memorial Day and Christmas so you can reserve a visit before slots fill up.</p>
+            <form name="newsletter" method="POST" action="/newsletter-success.html" data-netlify="true" netlify-honeypot="newsletter-honeypot" class="newsletter-form">
+                <input type="hidden" name="form-name" value="newsletter">
+                <div class="form-group" hidden>
+                    <label for="newsletter-honeypot">Don’t fill this out if you’re human:</label>
+                    <input type="text" id="newsletter-honeypot" name="newsletter-honeypot" tabindex="-1">
+                </div>
+                <div class="newsletter-fields">
+                    <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+                    <button type="submit" class="btn btn-secondary">Subscribe</button>
+                </div>
+                <p class="privacy-note">We never share your email. Unsubscribe anytime. <a href="/privacy-policy.html">Privacy Policy</a></p>
+            </form>
+        </div>
+    </section>
+    
     <footer>
         <div class="footer-container">
             <div class="footer-section">
@@ -284,6 +344,7 @@
                     <li><a href="/services-and-pricing.html">Services & Pricing</a></li>
                     <li><a href="/how-it-works.html">How It Works</a></li>
                     <li><a href="/service-area.html">Service Area</a></li>
+                    <li><a href="/privacy-policy.html">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="footer-section">

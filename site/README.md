@@ -46,7 +46,7 @@ To preview the site on your computer before deploying:
 
 1. Open Terminal and navigate to this folder:
    ```bash
-   cd /Users/themachine2.0/Desktop/AI/Peace\ Blooming/3-Website/site
+   cd /Users/themachine2.0/Desktop/AI/Peace Blooming/3-Website/site
    ```
 
 2. Start a simple web server:
@@ -156,4 +156,4 @@ For help, refer to the project docs in the parent folder (`/Users/themachine2.0/
 
 ---
 
-Built with Python. Last updated: 2026-08-02
+Built with Python. Last updated: 2026-08-03
