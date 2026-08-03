@@ -1386,9 +1386,23 @@ def generate_cemetery_page(cemetery_slug, cemetery_name, city):
         </div>
     </section>
 
+    # Cemetery photo: if a real image exists at service-area/{slug}.jpg, use it
+    photo_path = IMAGES_DIR / "service-area" / f"{cemetery_slug}.jpg"
+    photo_html = f'''<figure class="cemetery-photo">
+                <img src="/images/service-area/{cemetery_slug}.jpg" alt="{cemetery_name} grounds" loading="lazy">
+            </figure>''' if photo_path.exists() else ""
+
+    content = f"""<section class="page-hero">
+        <div class="container">
+            <h1>Grave Cleaning & Decorating at {cemetery_name}</h1>
+        </div>
+    </section>
+
     <section class="cemetery-content">
         <div class="container">
             {body_html}
+
+            {photo_html}
 
             <div class="cta-buttons">
                 <a href="tel:[PHONE]" class="btn btn-primary">Call [PHONE]</a>
@@ -2316,6 +2330,19 @@ a:focus-visible {
     border-radius: 12px;
     box-shadow: 0 12px 32px rgba(44, 62, 50, 0.12);
     margin: 2rem 0;
+    display: block;
+}
+
+/* Cemetery page photo */
+.cemetery-photo {
+    margin: 2rem 0;
+}
+
+.cemetery-photo img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(44, 62, 50, 0.12);
     display: block;
 }
 
