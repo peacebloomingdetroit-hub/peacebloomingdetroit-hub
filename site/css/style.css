@@ -759,6 +759,19 @@ a:focus-visible {
     display: block;
 }
 
+/* Cemetery page photo */
+.cemetery-photo {
+    margin: 2rem 0;
+}
+
+.cemetery-photo img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(44, 62, 50, 0.12);
+    display: block;
+}
+
 /* Real work section on homepage and services */
 .real-work {
     padding: 4rem 0;

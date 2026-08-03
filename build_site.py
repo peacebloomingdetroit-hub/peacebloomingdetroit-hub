@@ -1380,12 +1380,6 @@ def generate_cemetery_page(cemetery_slug, cemetery_name, city):
 
         body_html = markdown_to_html(cemetery_text)
 
-    content = f"""<section class="page-hero">
-        <div class="container">
-            <h1>Grave Cleaning & Decorating at {cemetery_name}</h1>
-        </div>
-    </section>
-
     # Cemetery photo: if a real image exists at service-area/{slug}.jpg, use it
     photo_path = IMAGES_DIR / "service-area" / f"{cemetery_slug}.jpg"
     photo_html = f'''<figure class="cemetery-photo">
