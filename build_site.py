@@ -1157,6 +1157,7 @@ def generate_contact_page():
 
                 <form name="service-request" id="service-request" method="POST" action="/contact-success.html" netlify netlify-honeypot="honeypot" class="contact-form">
                     <input type="hidden" name="form-name" value="service-request">
+                    <input type="hidden" name="subject" value="New Peace Blooming service request">
                     <div class="form-group" hidden>
                         <label for="honeypot">Don’t fill this out if you’re human:</label>
                         <input type="text" id="honeypot" name="honeypot" tabindex="-1">
@@ -1261,6 +1262,7 @@ def generate_form_blueprint():
     <!-- Hidden blueprint for Netlify Forms detection. Not linked from the site. -->
     <form name="service-request" method="POST" data-netlify="true" netlify-honeypot="honeypot">
         <input type="hidden" name="form-name" value="service-request">
+        <input type="hidden" name="subject" value="New Peace Blooming service request">
         <input type="text" id="honeypot" name="honeypot" tabindex="-1">
         <input type="text" name="name" required>
         <input type="text" name="contact" required>
