@@ -4,7 +4,7 @@ A static site for Peace Blooming, a grave cleaning and seasonal flower decoratin
 
 ## About
 
-This is the website for Peace Blooming, serving Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor with professional grave cleaning and seasonal decorating services. The site is built as a pure static HTML/CSS site with no server-side processing or build step — just open the files in a browser or deploy directly to any host.
+This is the website for Peace Blooming, serving Metro Detroit including Downriver and Metro Ann Arbor with professional grave cleaning and seasonal decorating services. The site is built as a pure static HTML/CSS site with no server-side processing or build step — just open the files in a browser or deploy directly to any host.
 
 ## File Structure
 

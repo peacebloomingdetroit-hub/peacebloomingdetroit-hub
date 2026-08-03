@@ -432,7 +432,7 @@ BASE_TEMPLATE = """<!DOCTYPE html>
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Peace Blooming</h3>
-                <p>Grave Cleaning & Seasonal Flowers<br>Wyandotte & Metro Detroit</p>
+                <p>Grave Cleaning & Seasonal Flowers<br>Metro Detroit including Downriver</p>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
@@ -493,7 +493,7 @@ def create_local_business_schema():
         "telephone": "[PHONE]",
         "email": "hello@peaceblooming.com",
         "priceRange": "$60-$400",
-        "description": "Grave cleaning and seasonal flower service for families across Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor.",
+        "description": "Grave cleaning and seasonal flower service for families across Metro Detroit, Downriver, and Metro Ann Arbor.",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "Brighton",
@@ -585,9 +585,9 @@ def generate_home_page():
     """Generate home page."""
     content = """<section class="hero">
         <div class="hero-content">
-            <p class="tagline">Grave Cleaning & Seasonal Flowers, Wyandotte & Metro Detroit</p>
+            <p class="tagline">Grave Cleaning & Seasonal Flowers, Metro Detroit including Downriver</p>
             <h1>Caring for your loved one's resting place, the way you would.</h1>
-            <p>Grave cleaning and seasonal flowers for families across Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor — including Mt Carmel Cemetery. You don't have to be there. We'll send you photos every time we are.</p>
+            <p>Grave cleaning and seasonal flowers for families across Metro Detroit, Downriver, and Metro Ann Arbor — including Mt Carmel Cemetery in Wyandotte. You don't have to be there. We'll send you photos every time we are.</p>
             <div class="hero-cta">
                 <a href="tel:[PHONE]" class="btn btn-primary">Call [PHONE]</a>
                 <a href="/contact.html" class="btn btn-secondary">Request Service Online</a>
@@ -665,7 +665,7 @@ def generate_home_page():
     <section class="service-area-preview">
         <div class="container">
             <h2>Where We Work</h2>
-            <p>Serving Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor — within about an hour of Brighton, MI. Currently caring for graves at Mt Carmel Cemetery (Our Lady of the Scapular), with more cemeteries added as we grow.</p>
+            <p>Serving Metro Detroit, Downriver, and Metro Ann Arbor. Currently caring for graves at Mt Carmel Cemetery in Wyandotte (Our Lady of the Scapular), with more cemeteries added as we grow.</p>
             <p class="centered"><a href="/service-area.html" class="btn btn-secondary">See Service Area</a></p>
         </div>
     </section>
@@ -744,7 +744,7 @@ def generate_home_page():
     schema = [create_local_business_schema(), create_home_faq_schema()]
     return wrap_in_template(content, 
         "Peace Blooming | Grave Cleaning & Seasonal Flowers",
-        "Grave cleaning and seasonal flower service for families in Wyandotte, Downriver, Metro Detroit, and Ann Arbor.",
+        "Grave cleaning and seasonal flower service for families in Metro Detroit, Downriver, and Ann Arbor.",
         schema)
 
 def generate_services_page():
@@ -870,7 +870,7 @@ def generate_services_page():
     
     return wrap_in_template(content,
         "Services & Pricing | Peace Blooming",
-        "Clear, upfront grave cleaning and decorating pricing for Wyandotte, Detroit, and Ann Arbor.",
+        "Clear, upfront grave cleaning and decorating pricing for Metro Detroit, Downriver, and Ann Arbor.",
         create_services_schema())
 
 def generate_how_it_works_page():
@@ -928,7 +928,7 @@ def generate_service_area_index():
     content = """<section class="page-hero">
         <div class="container">
             <h1>Service Area</h1>
-            <p>We're based in Brighton, MI, and serve families within about an hour's drive.</p>
+            <p>We serve families across Metro Detroit, Downriver, and Metro Ann Arbor.</p>
         </div>
     </section>
 
@@ -936,11 +936,11 @@ def generate_service_area_index():
         <div class="container">
             <h2>Our Service Regions</h2>
             <ul class="region-list">
-                <li><strong>Wyandotte & Downriver</strong> (our core, longest-served area) — Wyandotte, Southgate, Riverview, Trenton, Woodhaven, Taylor, Lincoln Park, and Allen Park.</li>
+                <li><strong>Wyandotte & Downriver</strong> — Wyandotte, Southgate, Riverview, Trenton, Woodhaven, Taylor, Lincoln Park, and Allen Park.</li>
                 <li><strong>Metro Detroit</strong> — Novi, Farmington Hills, Wixom, South Lyon, Milford, Northville, Plymouth, Livonia, Southfield, Royal Oak, Birmingham, Bloomfield Hills, Troy, Dearborn, and the City of Detroit.</li>
                 <li><strong>Metro Ann Arbor</strong> — Ann Arbor, Ypsilanti, Dexter, Chelsea, Saline, Whitmore Lake, and Pinckney.</li>
             </ul>
-            <p><em>Drive times from Brighton: Ann Arbor and Novi/Farmington Hills area are the closest, roughly 20-30 minutes; Downriver and outer Metro Detroit run closer to the 45-60 minute mark. If your cemetery isn't listed, reach out anyway — we're happy to check.</em></p>
+            <p><em>If your city or cemetery isn't listed, reach out anyway — we're happy to check whether we can serve it.</em></p>
         </div>
     </section>
 
@@ -989,7 +989,7 @@ def generate_service_area_index():
                 </div>
             </div>
 
-            <p>Don't see your city or cemetery listed? Reach out anyway — if it's within our service area (within about an hour of Brighton, MI), we're happy to serve it.</p>
+            <p>Don't see your city or cemetery listed? Reach out anyway — if it's in our service area, we're happy to serve it.</p>
 
             <div class="cta-buttons">
                 <a href="tel:[PHONE]" class="btn btn-primary">Call [PHONE]</a>
@@ -1001,7 +1001,7 @@ def generate_service_area_index():
     
     return wrap_in_template(content,
         "Service Area | Peace Blooming",
-        "Grave cleaning service in Wyandotte, Downriver, Detroit, and Ann Arbor. Find your cemetery.",
+        "Grave cleaning service in Metro Detroit, Downriver, and Metro Ann Arbor. Find your cemetery.",
         None)
 
 def generate_about_page():
@@ -1122,7 +1122,7 @@ def generate_contact_success_page():
                 <h2>Contact Information</h2>
                 <p><strong>Phone:</strong> <a href="tel:[PHONE]">[PHONE]</a></p>
                 <p><strong>Email:</strong> <a href="mailto:hello@peaceblooming.com">hello@peaceblooming.com</a></p>
-                <p><strong>Service Area:</strong> Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor</p>
+                <p><strong>Service Area:</strong> Metro Detroit including Downriver and Metro Ann Arbor</p>
             </div>
         </div>
     </section>
@@ -2892,7 +2892,7 @@ A static site for Peace Blooming, a grave cleaning and seasonal flower decoratin
 
 ## About
 
-This is the website for Peace Blooming, serving Wyandotte, Downriver, Metro Detroit, and Metro Ann Arbor with professional grave cleaning and seasonal decorating services. The site is built as a pure static HTML/CSS site with no server-side processing or build step — just open the files in a browser or deploy directly to any host.
+This is the website for Peace Blooming, serving Metro Detroit including Downriver and Metro Ann Arbor with professional grave cleaning and seasonal decorating services. The site is built as a pure static HTML/CSS site with no server-side processing or build step — just open the files in a browser or deploy directly to any host.
 
 ## File Structure
 
